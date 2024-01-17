@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon app.js",
-    "start":"node app.js"
+    "start":"node app.js",
+    "dev": "nodemon app-with-file.js",
+    "start":"node app-white-file.js"
   },
   "keywords": [],
   "author": "OSCAR R.",
