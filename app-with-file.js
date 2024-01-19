@@ -20,10 +20,34 @@ function displayMenu() {
   console.log("\n");
 }
 
+function loadTask(){
+try {
+  const data= readFileSync(DB_FILE, "utf-8");
+  const lines = data.split("\n");
+  tasks.length =0;
+
+  lines.forEach(line=>{
+    if(line.trim() !== ""){
+    const [task, completed]= line.split("|");
+    tasks.push({task, complete:complete=== true});
+    }
+  });
+
+  console.log(chalk.green.bold("las tareas se han cargado desde la BD"))
+} catch (err) {
+  
+}
+}
+
+function saveTask(){
+
+}
+
 function addTask() {
   rl.question(chalk.bgMagentaBright("Escribe la tarea: "), (task) => {
     tasks.push({ task, completed: false });
     console.log(chalk.green.bold("Tarea agregada con éxito\n"));
+    saveTask();
     displayMenu();
     chooseOption();
   });
@@ -59,6 +83,8 @@ function completeTask() {
       const index = parseInt(taskNumber) - 1;
       if (index >= 0 && index < tasks.length) {
         tasks[index].completed = true;
+        saveTask();
+        
         console.log(chalk.green.bold("Tarea marcada con exito ✅\n"));
       } else {
         console.log(chalk.red.bold("Número de tarea inválido \n"));
@@ -94,6 +120,6 @@ function chooseOption() {
     }
   });
 }
-
+loadTask();
 displayMenu();
 chooseOption();
