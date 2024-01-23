@@ -3,7 +3,7 @@ import { createInterface } from "readline";
 import chalk from "chalk";
 
 const tasks = [];
-const DB_FILE="task.txt";
+const DB_FILE = "tasks.txt";
 
 const rl = createInterface({
   input: process.stdin,
@@ -20,27 +20,29 @@ function displayMenu() {
   console.log("\n");
 }
 
-function loadTask(){
-try {
-  const data= readFileSync(DB_FILE, "utf-8");
-  const lines = data.split("\n");
-  tasks.length =0;
+function loadTasks() {
+  try {
+    const data = readFileSync(DB_FILE, "utf-8");
+    const lines = data.split("\n");
+    tasks.length = 0;
 
-  lines.forEach(line=>{
-    if(line.trim() !== ""){
-    const [task, completed]= line.split("|");
-    tasks.push({task, complete:complete=== true});
-    }
-  });
+    lines.forEach((line) => {
+      if (line.trim() !== "") {
+        const [task, completed] = line.split("|");
+        tasks.push({ task, completed: completed === true });
+      }
+    });
 
-  console.log(chalk.green.bold("las tareas se han cargado desde la BD"))
-} catch (err) {
-  
+    console.log(chalk.green.bold("Las tareas se han cargado desde la BD\n"));
+  } catch (err) {
+    console.log(chalk.green.bold("No hay tareas por hacer 😀👌🏻\n"));
+  }
 }
-}
 
-function saveTask(){
-
+function saveTask() {
+  const data = tasks.map((task) => `${task.task}|${task.completed}`).join("\n");
+  writeFileSync(DB_FILE, data, "utf-8");
+  console.log(chalk.green.bold("Tarea agregada a la BD con éxito\n"));
 }
 
 function addTask() {
@@ -84,7 +86,6 @@ function completeTask() {
       if (index >= 0 && index < tasks.length) {
         tasks[index].completed = true;
         saveTask();
-        
         console.log(chalk.green.bold("Tarea marcada con exito ✅\n"));
       } else {
         console.log(chalk.red.bold("Número de tarea inválido \n"));
@@ -120,6 +121,7 @@ function chooseOption() {
     }
   });
 }
-loadTask();
+
+loadTasks();
 displayMenu();
 chooseOption();
